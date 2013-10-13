@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    {{ parent() }}
+    <style type="text/css">
+        div.settings_handle {
+            float: right;
+            padding: 10px 20px;
+            margin: 0 5px;
+            background: purple;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="settings_handle"><a href="/unregister">Unregister from {{ queueId }}</a></div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "registered-page.html" %}
+
+{% block title %}Dequeue{% endblock %}
+{% block head %}
+    {{ parent() }}
+    <style type="text/css">
+        h1 {
+            color: red;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    {{ parent() }}
+    <h1>Serve a Customer - {{ queueId }}</h1>
+    <p>Click next to serve a waiting customer.</p>
+    <form method="POST">
+        <input type="submit" value="Next">
+    </form>
+    <p><b>TOKEN</b>: {{ msg|e }}</p>
+{% endblock %}
