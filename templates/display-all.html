@@ -3,21 +3,17 @@
 {% block title %}Display All{% endblock %}
 {% block head %}
     {{ parent() }}
-    <style type="text/css">
-        h1 {
-            color: green;
-        }
-        
+    <style type="text/css">        
         ul {
             list-style: none;
         }
         
         ul li:first-child {
-            color: yellow;
+            color: brown;
         }
     </style>
     
-    <script type="text/javascript" src="js/app/display-all.js"></script>
+    <script type="text/javascript" src="app/display-all.js"></script>
 {% endblock %}
 {% block content %}
     {{ parent() }}
