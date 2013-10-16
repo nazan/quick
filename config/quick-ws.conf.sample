@@ -1,0 +1,19 @@
+description "Ratchet Web Socket server running PHP."
+author      "Hussain Nazan Naeem <hussennaeem@gmail.com>"
+
+# All mounts must be completed
+start on started mountall
+stop on shutdown
+
+# Automatically Respawn:
+respawn
+respawn limit 10 5
+
+script
+    exec /home/nazan/project/coloranomaly/quick/bin/qc-pusher-server.php >> /var/log/quick-ws-server.log 2>&1
+end script
+
+# post-start script
+   # Optionally put a script here that will notifiy you node has (re)started
+   # /root/bin/hoptoad.sh "node.js has started!"
+# end script

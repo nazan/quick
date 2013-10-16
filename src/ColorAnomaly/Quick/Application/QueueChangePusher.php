@@ -21,6 +21,8 @@ class QueueChangePusher implements WampServerInterface {
         if (!array_key_exists($topic->getId(), $this->subscribedTopics)) {
             $this->subscribedTopics[$topic->getId()] = $topic;
         }
+        
+        echo "{$topic->getId()} subscriber count -> {$topic->count()}" . PHP_EOL;
     }
 
     public function onUnSubscribe(ConnectionInterface $conn, $topic) {
@@ -56,7 +58,12 @@ class QueueChangePusher implements WampServerInterface {
         $queueData = json_decode($json, true);
         
         if(isset($this->subscribedTopics['any'])) {
-            $this->subscribedTopics['any']->broadcast($queueData);
+            if($this->subscribedTopics['any']->count() > 0) {
+                echo "Broadcasting to -> 'any'" . PHP_EOL;
+                $this->subscribedTopics['any']->broadcast($queueData);
+            } else {
+                unset($this->subscribedTopics['any']);
+            }
         }
 
         // If the lookup topic object isn't set there is no one to publish to
@@ -65,9 +72,14 @@ class QueueChangePusher implements WampServerInterface {
         }
 
         $topic = $this->subscribedTopics[$queueData['queueId']];
-
-        // re-send the data to all the clients subscribed to that category
-        $topic->broadcast($queueData);
+        
+        if($topic->count() > 0) {
+            echo "Broadcasting to -> '{$queueData['queueId']}'" . PHP_EOL;
+            // re-send the data to all the clients subscribed to that category
+            $topic->broadcast($queueData);
+        } else {
+            unset($this->subscribedTopics[$queueData['queueId']]);
+        }
     }
 
 }
