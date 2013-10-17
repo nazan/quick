@@ -47,4 +47,4 @@ function nestConfig($config) {
     return $a;
 }
 
-require_once '../vendor/autoload.php';
+require_once APPLICATION_PATH . '/vendor/autoload.php';

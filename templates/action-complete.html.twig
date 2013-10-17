@@ -1,0 +1,12 @@
+{% extends "layout.html.twig" %}
+
+{% block title %}Action Response{% endblock %}
+
+{% block content %}
+    {{ parent() }}
+    <div class="jumbotron">
+        <h1>Action Complete</h1>
+        <p>{{ msg }}</p>
+        <a class="btn btn-primary" href="/">Go back</a>
+    </div>
+{% endblock %}

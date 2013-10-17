@@ -1,0 +1,10 @@
+<script id="queues-underscore-template"{% if queueId is defined %} data-qid="{{ queueId }}"{% endif %} data-wsep="{{ ws_end_point }}" type="text/template">
+    <% _.each(queues, function(queue) { %>
+        <div class="jumbotron">
+            <h1 data-qid="<%= queue.queueId %>">Queue - <%= queue.queueId %></h1>
+            <div class="row">
+                <% _.each(queue.actors, function(actor) { %><div class="col-md-3"><h2><%= actor.label %></h2></div><div class="col-md-9"><h2><span class="label label-success"><%= actor.token %></span></h2></div><% }); %>
+            </div>
+        </div>
+    <% }); %>
+</script>

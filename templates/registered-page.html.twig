@@ -1,0 +1,6 @@
+{% extends "layout.html.twig" %}
+
+{% block content %}
+    {{ parent() }}
+    <a class="btn btn-danger pull-right" href="/unregister">Unregister from {{ queueId }}</a>
+{% endblock %}

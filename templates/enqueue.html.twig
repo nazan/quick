@@ -1,0 +1,22 @@
+{% extends "registered-page.html.twig" %}
+
+{% block title %}Enqueue{% endblock %}
+
+{% block content %}
+    {{ parent() }}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Dispense Token - {{ queueId }}</h1>
+    
+            <p>Click next to generate a token.</p>
+
+            <form role="form" method="POST">
+                <div class="form-group">
+                    <input type="submit" class="btn btn-default btn-success" value="Next">
+                </div>
+            </form>
+            
+            {% if msg is not empty %}<p><strong>TOKEN</strong>:&nbsp;<span class="badge">{{ msg|e }}</span></p>{% endif %}
+        </div>
+    </div>
+{% endblock %}

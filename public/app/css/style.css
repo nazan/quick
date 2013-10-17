@@ -8,11 +8,8 @@ prohibited.
     Author     : Hussain Nazan Naeem <hussennaeem@gmail.com>
 */
 
-/*
+/* Move down content because we have a fixed navbar that is 50px tall */
 body {
-    background: #666;
+    padding-top: 40px;
+    padding-bottom: 20px;
 }
-
-a {
-    color: #fff;
-}*/

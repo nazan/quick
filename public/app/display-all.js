@@ -8,6 +8,7 @@ $(window).load(function() {
     var queuesHolder = $('#queues_holder').first();
 
     var templateTag = $('#queues-underscore-template').first();
+    var wsep = templateTag.data('wsep'); // Websocket end point.
 
     var template = _.template(templateTag.html());
 
@@ -28,7 +29,7 @@ $(window).load(function() {
     renderData();
 
     var conn = new ab.Session(
-            'ws://localhost:8090',
+            wsep,
             function() {
                 conn.subscribe('any', function(topic, data) {
                     console.log('Change detected in queue "' + topic + '"');

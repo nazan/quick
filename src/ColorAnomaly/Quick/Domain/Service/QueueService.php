@@ -188,11 +188,11 @@ class QueueService {
         }
     }
 
-    public function dequeueToken($queueId, $actorId) {
+    public function dequeueToken($queueId, $actorId, $recall = false) {
         $queue = $this->dm->getRepository('ColorAnomaly\Quick\Domain\Queue')->findOneBy(array('name' => $queueId));
 
         if ($queue instanceof Queue) {
-            $token = $queue->dequeueToken($actorId);
+            $token = $queue->dequeueToken($actorId, $recall);
 
             $this->dm->flush();
 

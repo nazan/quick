@@ -1,0 +1,23 @@
+{% extends "layout.html.twig" %}
+
+{% block title %}Display All{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    <style type="text/css">
+        .jumbotron div.row div:first-child h2 {
+            color: #d9534f;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {{ parent() }}
+    <div id="queues_holder"></div>
+    {% include "queues-underscore-template.html.twig" %}
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+    <script type="text/javascript" src="/app/display-all.js"></script>
+{% endblock %}

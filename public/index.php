@@ -40,7 +40,7 @@ $app->get('/', function () use ($app) {
     // Sample log message
     $app->log->info("Slim-Skeleton '/' route");
     // Render index view
-    $app->render('index.html');
+    $app->render('index.html.twig');
 });
 
 $app->map('/register', function () use ($app) {
@@ -61,11 +61,12 @@ $app->map('/register', function () use ($app) {
         }
     }
 
-    $app->render('register.html', array('msg' => $msg, 'queues' => $queues));
+    $app->render('register.html.twig', array('msg' => $msg, 'queues' => $queues));
 })->via('GET', 'POST');
 
 $app->get('/unregister', function () use ($app) {
     $uc = $app->getUserContext();
+    $config = $app->getConfig();
     
     $qs = $app->getQueueService();
     
@@ -75,11 +76,13 @@ $app->get('/unregister', function () use ($app) {
         $queueId = $uc['queue']->getName();
         
         try {
+            $zmqGateway = $config['app']['websocket_server']['zmq_gateway'];
+            
             $queue = $qs->getQueue($queueId);
 
             $context = new ZMQContext();
             $socket = $context->getSocket(ZMQ::SOCKET_PUSH, 'queue change pusher');
-            $socket->connect("tcp://localhost:5555");
+            $socket->connect("{$zmqGateway['protocol']}://{$zmqGateway['host']}:{$zmqGateway['port']}");
 
             $socket->send(json_encode($queue->getDisplayInfo()));
         } catch (QueueInappropriateReadException $irExcp) {
@@ -121,11 +124,12 @@ $app->map('/enqueue', function () use ($app) {
         $app->redirect('/register');
     }
 
-    $app->render('enqueue.html', array('queueId' => $queueId, 'msg' => $msg));
+    $app->render('enqueue.html.twig', array('queueId' => $queueId, 'msg' => $msg));
 })->via('GET', 'POST');
 
 $app->map('/dequeue', function () use ($app) {
     $uc = $app->getUserContext();
+    $config = $app->getConfig();
     $queueId = $uc['queue']->getName();
     $actorId = $uc['id'];
     $qs = $app->getQueueService();
@@ -133,16 +137,20 @@ $app->map('/dequeue', function () use ($app) {
 
     try {
         if ($app->request->isPost()) {
+            $post = $app->request->post();
+            $act = isset($post['act']) && strtolower($post['act']) == 'call' ? 'call' : 'next';
             try {
-                $token = $qs->dequeueToken($queueId, $actorId);
+                $token = $qs->dequeueToken($queueId, $actorId, $act == 'call');
                 $msg = "$token";
 
                 try {
+                    $zmqGateway = $config['app']['websocket_server']['zmq_gateway'];
+                    
                     $queue = $qs->getQueue($queueId);
 
                     $context = new ZMQContext();
                     $socket = $context->getSocket(ZMQ::SOCKET_PUSH, 'queue change pusher');
-                    $socket->connect("tcp://localhost:5555");
+                    $socket->connect("{$zmqGateway['protocol']}://{$zmqGateway['host']}:{$zmqGateway['port']}");
 
                     $socket->send(json_encode($queue->getDisplayInfo()));
                 } catch (QueueInappropriateReadException $irExcp) {
@@ -150,6 +158,8 @@ $app->map('/dequeue', function () use ($app) {
                 } catch (\Exception $sockExcp) {
                     echo "Socket comm failed." . PHP_EOL;
                 }
+            } catch (QueueInappropriateReadException $irExcp2) {
+                $msg = "Please click 'Next' first.";
             } catch (QueueEmptyException $eExcp) {
                 $msg = "No one in line.";
             }
@@ -158,7 +168,7 @@ $app->map('/dequeue', function () use ($app) {
                 $currentToken = $qs->getCurrentTokenServed($actorId);
                 $msg = "You are currently serving $currentToken";
             } catch (QueueInappropriateReadException $irExcp) {
-                $msg = "You have not served any token yet.";
+                $msg = "You have not served any customer yet.";
             }
         }
     } catch (QueueException $excp) {
@@ -166,21 +176,30 @@ $app->map('/dequeue', function () use ($app) {
         $app->redirect('/register');
     }
 
-    $app->render('dequeue.html', array('queueId' => $queueId, 'msg' => $msg));
+    $app->render('dequeue.html.twig', array('queueId' => $queueId, 'msg' => $msg));
 })->via('GET', 'POST');
 
 $app->get('/display', function () use ($app) {
     $uc = $app->getUserContext();
+    $config = $app->getConfig();
 
     $queue = $uc['queue'];
 
     $displayData = $queue->getDisplayInfo();
+    
+    $wsListen = $config['app']['websocket_server']['uri'];
+    $displayData['ws_end_point'] = "{$wsListen['protocol']}://{$wsListen['host']}:{$wsListen['port']}";
 
-    $app->render('display.html', $displayData);
+    $app->render('display.html.twig', $displayData);
 });
 
 $app->get('/display-all', function () use ($app) {
-    $app->render('display-all.html');
+    $config = $app->getConfig();
+    
+    $wsListen = $config['app']['websocket_server']['uri'];
+    $data = array('ws_end_point' => "{$wsListen['protocol']}://{$wsListen['host']}:{$wsListen['port']}");
+    
+    $app->render('display-all.html.twig', $data);
 });
 
 $app->get('/queue(/:queueId)', function ($queueId = null) use ($app) {
@@ -212,7 +231,7 @@ $app->get('/add-queue/:name(/:lower(/:upper))', function($name, $lower = 1000, $
 
     $service->addQueue($name, $lower, $upper);
 
-    $app->render('action-complete.html', array('msg' => "$name queue added successfully."));
+    $app->render('action-complete.html.twig', array('msg' => "'$name' queue added successfully."));
 });
 
 // Run app

@@ -135,11 +135,16 @@ class Queue {
         return $this->enqueue();
     }
     
-    public function dequeueToken($actorId) {
+    public function dequeueToken($actorId, $recall = false) {
         foreach ($this->actors as $k => $a) {
             if ($a->getId() == $actorId) {
-                $token = $this->dequeue();
-                $a->setServingToken($token);
+                if(!$recall) {
+                    $token = $this->dequeue();
+                    $a->setServingToken($token);
+                } else {
+                    $token = $a->getServingToken();
+                }
+                
                 $a->setDequeuedAt(new \DateTime());
                 
                 return $token;
