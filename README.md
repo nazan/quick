@@ -37,6 +37,8 @@ Installation instructions
 
            ./bin/qc-pusher-server.php  
 
+        3. In order to run this script automatically use the the sample Upstart script located in config folder.
+
 9. Go to browser and create a new queue by entering the following URL.
     
     http://your-virtual-host-name/add-queue/queue-name/starting-number/ending-number  
@@ -47,4 +49,12 @@ Installation instructions
 
 10. Now give it a go. Start at http://your-virtual-host-name/register
 
-11. Please e-mail me at hussennaeem@gmail.com if you run into any trouble while installing. Usage instructions are not complete yet so please feel free to inquire about that as well.
+11. Note that the system is by default setup for a development environment. I.e. if 'APPLICATION_ENV' environment variable equals 'development'.
+    In this setup, the system automatically identifies clients by the 'HTTP_USER_AGENT' value.
+    For example, if you go to the above URL with Firefox the system detects it as a distinct client.
+    Likewise if  you go to the same URL with Chrome the system identifies it as another distict client even thought the origin of both connections is the same.
+    This identification is done in the application layer. You may test out the system with two different Web browsers.
+    Register one browser to display the queue while the other browser serves tokens.
+    If you change 'APPLICATION_ENV' to 'production', the identification is done based on client IP address.
+
+12. Please e-mail me at hussennaeem@gmail.com if you run into any trouble while installing. Usage instructions are not complete yet so please feel free to inquire about that as well.
