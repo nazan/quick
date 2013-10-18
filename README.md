@@ -1,4 +1,7 @@
-#Quick - A simple queue implementation. Pronounced 'Que-ick' like Buick, the luxury car manufacturer.
+#Quick - A simple queue implementation.
+
+
+Pronounced 'Que-ick' like Buick, the luxury car manufacturer.
 
 Installation instructions
 -------------------------
