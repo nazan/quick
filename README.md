@@ -37,9 +37,9 @@ Installation instructions
 	1. Make sure the script bin/qc-pusher-server.php is executable.  
 	2. Run it at a terminal. Note that Websocket server must be run at the same machine as Apache web server is running.  
 
-           ./bin/qc-pusher-server.php  
-
-        3. In order to run this script automatically use the the sample Upstart script located in config folder.
+               ./bin/qc-pusher-server.php
+	
+	3. In order to run this script automatically use the the sample Upstart script 'quick-ws.conf.sample' located in config folder.
 
 9. Go to browser and create a new queue by entering the following URL.
     
