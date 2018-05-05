@@ -61,7 +61,8 @@ class SlimApp extends \Slim\Slim {
         if (is_null($this->dm)) {
             $config = $this->config['app']['odm'];
 
-            $connectionString = "mongodb://{$config['ds']['user']}:{$config['ds']['password']}@{$config['ds']['server']}:{$config['ds']['port']}/{$config['ds']['dbname']}";
+            //$connectionString = "mongodb://{$config['ds']['user']}:{$config['ds']['password']}@{$config['ds']['server']}:{$config['ds']['port']}/{$config['ds']['dbname']}";
+            $connectionString = "mongodb://{$config['ds']['server']}:{$config['ds']['port']}/{$config['ds']['dbname']}";
 
             $connection = new Connection($connectionString);
             $c = new Configuration();

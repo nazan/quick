@@ -1,0 +1,73 @@
+version: '2'
+services:
+  quick-web:
+    build:
+      context: ./
+      dockerfile: quick-web.dockerfile
+      args:
+        - UID
+        - GID
+    working_dir: /var/www
+    volumes:
+      - ../:/var/www
+      - ../public:/var/www/html
+      - ./:/usr/local/my-setup
+    depends_on:
+      - mongodb
+      - quick-ws
+    expose:
+      - "80"
+      - "443"
+    networks:
+      mydockernet:
+        ipv4_address: 192.168.21.3
+  
+  quick-ws:
+    build:
+      context: ./
+      dockerfile: quick-ws.dockerfile
+      args:
+        - UID
+        - GID
+    working_dir: /var/www
+    volumes:
+      - ../:/var/www
+      - ./:/usr/local/my-setup
+    depends_on:
+      - mongodb
+    expose:
+      - "8090"
+      - "5555"
+    networks:
+      mydockernet:
+        ipv4_address: 192.168.21.4
+
+  mongodb:
+    build:
+      context: ./
+      dockerfile: quick-db.dockerfile
+      args:
+        - UID
+        - GID
+    expose:
+      - "27017"
+    volumes:
+      - "dbdata:/data/db"
+      - ./:/usr/local/my-setup
+    command: mongod
+    networks:
+      mydockernet:
+        ipv4_address: 192.168.21.2
+
+
+volumes:
+  dbdata:
+
+networks:
+  mydockernet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.21.0/24
+          gateway: 192.168.21.1

@@ -19,7 +19,7 @@ $pusher = new QueueChangePusher();
 // Listen for the web server to make a ZeroMQ push after an ajax request
 $context = new React\ZMQ\Context($loop);
 $pull = $context->getSocket(ZMQ::SOCKET_PULL);
-$pull->bind("{$zmqGateway['protocol']}://{$zmqGateway['host']}:{$zmqGateway['port']}"); // Binding to 127.0.0.1 means the only client that can connect is itself
+$pull->bind("{$zmqGateway['protocol']}://0.0.0.0:{$zmqGateway['port']}"); // Binding to 127.0.0.1 means the only client that can connect is itself
 $pull->on('message', array($pusher, 'onQueueChange'));
 
 // Set up our WebSocket server for clients wanting real-time updates

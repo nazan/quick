@@ -8,3 +8,4 @@ composer.lock
 /nbproject/
 /odm/Hydrators/*
 /odm/Proxies/*
+/config/application.ini
