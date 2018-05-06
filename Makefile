@@ -34,6 +34,6 @@ code-prepare:
 	&& mkdir -p odm/Hydrators odm/Proxies \
 	&& chmod 777 odm/Hydrators odm/Proxies
 	
-	docker-compose -f ./dc/docker-compose.yml run -v "$$(pwd)":/home/appuser -w /home/appuser -u $(UID) --no-deps --rm quick-web composer install
+	docker-compose -f ./dc/docker-compose.yml run -v "$$(pwd)":/home/appuser -w /home/appuser -u "$(UID)" --no-deps --rm quick-web composer install
 
 	echo "Make sure config/application.ini exists and is set correctly. Also don't forget to update your /etc/hosts file."
