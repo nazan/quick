@@ -20,6 +20,8 @@ services:
       - "443"
     ports:
       - "${QC_WEB_CONTAINER_BIND_PORT}:80"
+    environment:
+      - APPLICATION_ENV
     networks:
       mydockernet:
         ipv4_address: 192.168.21.3
@@ -42,6 +44,8 @@ services:
       - "5555"
     ports:
       - "${QC_WS_CONTAINER_BIND_PORT}:8090"
+    environment:
+      - APPLICATION_ENV
     networks:
       mydockernet:
         ipv4_address: 192.168.21.4
