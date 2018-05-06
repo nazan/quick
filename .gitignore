@@ -10,4 +10,4 @@ composer.lock
 /odm/Proxies/*
 /config/application.ini
 .env
-./composer
+/.composer
