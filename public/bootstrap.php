@@ -3,10 +3,8 @@
 /**
  * Setup autoloader for here.
  */
-
-if(!defined('APPLICATION_ENV')) {
-    define('APPLICATION_ENV', 'development');
-}
+$envVar = 'APPLICATION_ENV';
+define($envVar, empty(getenv($envVar)) ? 'development' : getenv($envVar));
 
 define('APPLICATION_PATH', realpath(dirname(__DIR__)));
 

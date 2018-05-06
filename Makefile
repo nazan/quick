@@ -2,7 +2,7 @@ DOCKER_REGISTRY ?= dkrhub:5000
 
 UID ?= 1000
 
-APPLICATION_ENV ?= development
+
 
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
 
