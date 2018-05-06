@@ -32,7 +32,8 @@ code-prepare:
 	touch logs/app.log \
 	&& chmod 777 logs/app.log templates/cache \
 	&& mkdir -p odm/Hydrators odm/Proxies \
-	&& chmod 777 odm/Hydrators odm/Proxies
+	&& chmod 777 odm/Hydrators odm/Proxies \
+	&& mkdir vendor
 	
 	docker-compose -f ./dc/docker-compose.yml run --no-deps --rm -u $(UID) quick-web composer install
 
