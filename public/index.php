@@ -20,7 +20,11 @@ $app->add(new \ColorAnomaly\Quick\Application\UseCaseBasedRedirectMiddleware());
 // (Singleton resources retrieve the same log resource definition each time)
 $app->container->singleton('log', function () {
     $log = new \Monolog\Logger('slim-skeleton');
-    $log->pushHandler(new \Monolog\Handler\StreamHandler('../logs/app.log', \Psr\Log\LogLevel::DEBUG));
+    
+    $logLevel = APPLICATION_ENV === 'production' ? \Psr\Log\LogLevel::INFO : \Psr\Log\LogLevel::DEBUG;
+
+    $log->pushHandler(new \Monolog\Handler\StreamHandler('../logs/app.log', $logLevel));
+
     return $log;
 });
 
