@@ -1,0 +1,15 @@
+{% extends "layout.html.twig" %}
+
+{% block title %}Printer Test{% endblock %}
+
+{% block content %}
+{{ parent() }}
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Print Test</h2>
+        
+        <a href="/printer-test" class="btn btn-success">Test</a>
+    </div>
+</div>
+{% endblock %}

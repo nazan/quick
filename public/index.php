@@ -47,6 +47,12 @@ $app->get('/', function () use ($app) {
     $app->render('index.html.twig');
 });
 
+$app->get('/printer-test', function() use($app) {
+    $app->printerTest();
+
+    $app->render('printer-test.html.twig', array());
+});
+
 $app->map('/register', function () use ($app) {
     $queues = $app->getQueueService()->getQueueNames();
     $msg = '';
@@ -109,6 +115,10 @@ $app->map('/enqueue', function () use ($app) {
         if ($app->request->isPost()) {
             try {
                 $token = $qs->enqueueToken($queueId);
+                $queue = $qs->getQueue($queueId);
+
+                $app->sendPrint($queue, $token);
+
                 $msg = "$token";
             } catch (QueueOverflowException $ofExcp) {
                 $lastToken = $qs->getLastTokenDispensed($queueId);

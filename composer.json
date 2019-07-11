@@ -18,7 +18,8 @@
         "twig/twig": "~1.13",
         "doctrine/mongodb-odm": "1.0.*@dev",
         "cboden/Ratchet": "0.2.*",
-        "react/zmq": "0.1.*"
+        "react/zmq": "0.1.*",
+        "mike42/escpos-php": "^2.1"
     },
     "autoload": {
         "psr-0": { "ColorAnomaly\\Quick": "./src" }

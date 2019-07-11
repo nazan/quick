@@ -15,6 +15,12 @@ use Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver;
 
 use ColorAnomaly\Quick\Domain\Service\QueueService;
 
+use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
+use Mike42\Escpos\PrintConnectors\FilePrintConnector;
+use Mike42\Escpos\Printer;
+
+use Mike42\Escpos\CapabilityProfile;
+
 /**
  * Description of SlimApp
  *
@@ -110,6 +116,107 @@ class SlimApp extends \Slim\Slim {
         }
 
         return $this->userContext;
+    }
+
+    public function sendPrint($queue, $token) {
+        $c = $this->getConfig()['app']['printer'];
+
+        $connector = new NetworkPrintConnector($c['ip'], $c['port']);
+    
+        if($c['feature_set'] == 'full') { // For printers with full feature set.
+            $printer = new Printer($connector);
+        } else { // For printers with minimal feature set.
+            $profile = CapabilityProfile::load("simple");
+            $printer = new Printer($connector, $profile);
+        }
+
+        try {
+            $printer->initialize();
+            $printer->setPrintLeftMargin(15);
+            $printer->setPrintWidth(586);
+            $printer->setFont(Printer::FONT_A);
+            
+            $printer->setEmphasis(true);
+            $printer->setJustification(Printer::JUSTIFY_CENTER);
+            
+            $printer->setLineSpacing(60);
+            $printer->setTextSize(1, 1);
+            
+            $printer->text("Allied Insurance Company");
+            $printer->feed();
+
+            
+            $printer->setTextSize(2, 2);
+            
+            $printer->text($queue->getName());
+            $printer->feed();
+            
+            
+            $printer->setTextSize(3, 3);
+            
+            $printer->text($token);
+            $printer->feed();
+
+            
+            $printer->setTextSize(1, 1);
+
+            $printer->text(date("d/m/Y H:i:s"));
+            $printer->feed();
+
+            $aheadCount = $queue->getEnqueueLast() - $queue->getDequeueLast();
+            if($aheadCount > 0) {
+                $printer->text("$aheadCount customers ahead of you.");
+            } else {
+                $printer->text("You are next in line.");
+            }
+            $printer->feed(1);
+            
+            $printer->cut(Printer::CUT_FULL, 3); // Printer::CUT_FULL or Printer::CUT_PARTIAL
+            $printer->close();
+        } finally {
+            $printer->close();
+        }
+    }
+
+    public function printerTest() {
+        $c = $app->getConfig()['app']['printer'];
+
+        $connector = new NetworkPrintConnector($c['ip'], $c['port']);
+        
+        if($c['feature_set'] == 'full') { // For printers with full feature set.
+            $printer = new Printer($connector);
+        } else { // For printers with minimal feature set.
+            $profile = CapabilityProfile::load("simple");
+            $printer = new Printer($connector, $profile);
+        }
+
+        try {
+            $printer->initialize();
+            $printer->setPrintLeftMargin(15);
+            $printer->setPrintWidth(586);
+            $printer->setFont(Printer::FONT_B);
+            $printer->setLineSpacing(56);
+
+            $printer->setEmphasis(true);
+            $printer->setJustification(Printer::JUSTIFY_CENTER);
+            
+            $printer->setTextSize(2, 2);
+            $printer->text("Allied Insurance Company");
+            $printer->feed(1);
+
+            $printer->setTextSize(1, 1);
+            $printer->text("<Queue Name Here>");
+            $printer->feed();
+            
+            //$printer->barcode("656565656", Printer::BARCODE_CODE39);
+            //$printer->qrCode("Hello World");
+            
+            //$printer->feed(3);
+            $printer->cut(Printer::CUT_FULL, 3); // Printer::CUT_FULL or Printer::CUT_PARTIAL
+            $printer->close();
+        } finally {
+            $printer->close();
+        }
     }
 
     public function getConfig() {

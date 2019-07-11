@@ -209,5 +209,4 @@ class QueueService {
 
         return $token;
     }
-
 }

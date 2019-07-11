@@ -19,10 +19,15 @@ class UseCaseBasedRedirectMiddleware extends \Slim\Middleware {
         
         if(in_array($resourceURI, array('/enqueue', '/dequeue', '/display', '/'))) {
             $uc = $app->getUserContext();
-            if(is_null($uc['queue'])) {
-                $app->redirect('/register');
-            } elseif($resourceURI != $uc['role']) {
-                $app->redirect($uc['role']);
+            
+            try {
+                if(is_null($uc['queue'])) {
+                    $app->redirect('/register');
+                } elseif($resourceURI != $uc['role']) {
+                    $app->redirect($uc['role']);
+                }
+            } catch (\Slim\Exception\Stop $e) {
+                $app->log->debug('Redirect.');
             }
         }
         
